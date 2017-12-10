@@ -4215,8 +4215,10 @@ var CameraReality = function (_Reality) {
 	_createClass(CameraReality, [{
 		key: '_handleNewFrame',
 		value: function _handleNewFrame(frame) {
-			if (this._arCoreCameraRenderer) {
-				this._arCoreCameraRenderer.render();
+			if (this._vrDisplay) {
+				if (this._arCoreCameraRenderer) {
+					this._arCoreCameraRenderer.render();
+				}
 				this._vrDisplay.getFrameData(this._vrFrameData);
 			}
 
@@ -4231,8 +4233,12 @@ var CameraReality = function (_Reality) {
 			this._running = true;
 
 			if (this._vrDisplay !== null) {
-				// Using ARCore
-				this._arCoreCameraRenderer = new _ARCoreCameraRenderer2.default(this._vrDisplay, this._elContext);
+				// Using WebAR
+				if (window.WebARonARKitSetData) {
+					// WebARonARKit renders camera separately
+				} else {
+					this._arCoreCameraRenderer = new _ARCoreCameraRenderer2.default(this._vrDisplay, this._elContext);
+				}
 				this._initialized = true;
 			} else if (_ARKitWrapper2.default.HasARKit()) {
 				// Using ARKit
